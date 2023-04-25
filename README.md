@@ -6,6 +6,9 @@
 >✨ WIP
 Quickly generate console.log
 
+## Hot key
+- ctrl+l
+
 ![demo](assets/demo.gif)
 
 ## :coffee:

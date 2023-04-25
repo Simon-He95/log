@@ -6,6 +6,9 @@
 >✨ WIP
 快速的生成console.log
 
+## 快捷键
+- ctrl+l
+- 
 ![demo](assets/demo.gif)
 
 ## :coffee:
