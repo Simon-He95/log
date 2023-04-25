@@ -6,6 +6,8 @@
 >✨ WIP
 Quickly generate console.log
 
+![demo](assets/demo.gif)
+
 ## :coffee:
 
 [buy me a cup of coffee](https://github.com/Simon-He95/sponsor)
