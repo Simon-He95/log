@@ -11,7 +11,13 @@ export function activate() {
     const [start, end] = getPosition(doc.getText(), selection.start.c)
     // 获取全部文本区域
     const text = doc.getText(selection)
-    let append = `console.log('~ logger 🤪 : ', ${text || '\'\''})\n`
+    // 获取当前编辑器所编辑文件资源的路径
+    let document = editor.document;
+    // 通过路径获取文件名
+    const fileName = document.fileName.includes('/')
+      ? document.fileName.split('/')[document.fileName.split('/').length - 1]
+      : document.fileName.split('\\')[document.fileName.split('\\').length - 1];
+    let append = `console.log('~ logger 🤪 ~ file: ${fileName} : ', ${text || '\'\''})\n`
 
     if (!text) {
       return textEditor.edit((builder) => {
@@ -41,7 +47,7 @@ export function activate() {
       return node_start <= start && node_end >= end
     })
     if (target)
-      append = `  console.log('~ logger 🤪 ${target.name} -> ${text}: ', ${text})\n`
+      append = `  console.log('~ logger 🤪 ~ file: ${fileName} ~ ${target.name} -> ${text}: ', ${text})\n`
 
     textEditor.edit((builder) => {
       builder.insert(new vscode.Position(selection.end.line + 1, 0), append)
