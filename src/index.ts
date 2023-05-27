@@ -2,6 +2,11 @@ import * as vscode from 'vscode'
 import * as ts from 'typescript'
 import { dashAst } from './walker'
 
+/**
+ * todo:
+ * 1. 判断上下文如果在注释代码中，需要自动生成到最后一个注释后
+ * 2. 生成的前缀空格还需要改进
+ */
 export function activate() {
   vscode.commands.registerTextEditorCommand('extension.log', async (textEditor) => {
     // todo: 根据选中内容当前行判断是否是存在换行定义字段，将log追加到其之后
@@ -10,11 +15,14 @@ export function activate() {
     // 获取全部文本区域
     const allText = doc.getText()
     const fileName = doc.fileName.split(vscode.env.appName === 'Visual Studio Code' ? '/' : '\\').slice(-1)[0]
+    const suffix = fileName.split('.').slice(-1)[0]
+
     const selection = editor.selection as any
     const [start, end] = getPosition(allText, selection.start.c, selection.start.e)
     const tab = getTab(allText, selection.start.c)
     const text = doc.getText(selection)
-    let append = `${' '.repeat(tab)}console.log('🤪 ~ file: ${fileName}:${selection.end.line + 1} : ', ${text || '\'\''})\n`
+    debugger
+    const append = transformAppend(suffix, tab, `🤪 ~ file: ${fileName}:${selection.end.line + 1}`, text)
     if (!text) {
       return textEditor.edit((builder) => {
         builder.insert(new vscode.Position(selection.end.line + 1, 0), append)
@@ -64,10 +72,8 @@ export function activate() {
       return `${pre}/${cur.name}`
     }, '')
 
-    append = `${' '.repeat(tab)}console.log('🤪 ~ file: ${fileName}:${fileInfo} [${head}] -> ${text} : ', ${text})\n`
-
     textEditor.edit((builder) => {
-      builder.insert(position, append)
+      builder.insert(position, transformAppend(suffix, tab, `🤪 ~ file: ${fileName}:${fileInfo} [${head}] -> ${text}`, text))
     })
   })
 }
@@ -110,4 +116,15 @@ function getTab(allText: string, line: number) {
       return tabCount
   }
   return tabCount
+}
+
+function transformAppend(suffix: string, tab: number, logPrefix: string, text: string) {
+  switch (suffix) {
+    case 'go':
+      return `${' '.repeat(tab)}fmt.Println('${logPrefix} : ', ${text || '\'\''})\n`
+    case 'rs':
+      return `${' '.repeat(tab)}println('${logPrefix} : ', ${text || '\'\''})\n`
+    default:
+      return `${' '.repeat(tab)}console.log('${logPrefix} : ', ${text || '\'\''})\n`
+  }
 }
