@@ -21,7 +21,6 @@ export function activate() {
     const [start, end] = getPosition(allText, selection.start.c, selection.start.e)
     const tab = getTab(allText, selection.start.c)
     const text = doc.getText(selection)
-    debugger
     const append = transformAppend(suffix, tab, `🤪 ~ file: ${fileName}:${selection.end.line + 1}`, text)
     if (!text) {
       return textEditor.edit((builder) => {
@@ -121,10 +120,10 @@ function getTab(allText: string, line: number) {
 function transformAppend(suffix: string, tab: number, logPrefix: string, text: string) {
   switch (suffix) {
     case 'go':
-      return `${' '.repeat(tab)}fmt.Println('${logPrefix} : ', ${text || '\'\''})\n`
+      return `${' '.repeat(tab)}fmt.Println("${logPrefix} : ", ${text || '\"\"'})\n`
     case 'rs':
-      return `${' '.repeat(tab)}println('${logPrefix} : ', ${text || '\'\''})\n`
+      return `${' '.repeat(tab)}println("${logPrefix} : ", ${text || '\"\"'})\n`
     default:
-      return `${' '.repeat(tab)}console.log('${logPrefix} : ', ${text || '\'\''})\n`
+      return `${' '.repeat(tab)}console.log('${logPrefix} : ', ${text || '\"\"'})\n`
   }
 }
