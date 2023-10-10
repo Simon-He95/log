@@ -122,7 +122,7 @@ function transformAppend(suffix: string, tab: number, logPrefix: string, text: s
     case 'go':
       return `${' '.repeat(tab)}fmt.Println("${logPrefix} : ", ${text || '\"\"'})\n`
     case 'rs':
-      return `${' '.repeat(tab)}println("${logPrefix} : ", ${text || '\"\"'})\n`
+      return `${' '.repeat(tab)}println!("${logPrefix} : {}", ${text || '\"\"'});\n`
     default:
       return `${' '.repeat(tab)}console.log('${logPrefix} : ', ${text || '\"\"'})\n`
   }
