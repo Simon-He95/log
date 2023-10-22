@@ -69,8 +69,8 @@ function getLog(editor: vscode.TextEditor) {
   const doc = editor.document
   const fileName = doc.fileName.split(vscode.env.appName === 'Visual Studio Code' ? '/' : '\\').slice(-1)[0]
   const suffix = fileName.split('.').slice(-1)[0]
-
-  const data = Array.from(selections).map((selection: vscode.Selection) => {
+  const data: any[] = []
+  for (const selection of Array.from(selections)) {
     const [start, end] = getPosition(allText, selection.start.line, selection.start.character)
     const tab = getTab(allText, selection.start.line)
     const text = doc.getText(selection)
@@ -120,8 +120,9 @@ function getLog(editor: vscode.TextEditor) {
       }
       return `${pre}/${cur.name}`
     }, '')
-    return [position, tab, fileInfo, head, text,]
-  })
+    data.push([position, tab, fileInfo, head, text,])
+  }
+
   editor.edit((builder) => {
     data.forEach(item => {
       const [position, tab, fileInfo, head, text] = item as any
@@ -131,7 +132,7 @@ function getLog(editor: vscode.TextEditor) {
 
 }
 
-function logWithRandomColor(text:string, variable:any) {
+function logWithRandomColor(text: string, variable: any) {
   const randomColor = '#' + Math.floor(Math.random() * 16777215).toString(16);
   return `console.log('%c${text}', 'color: ${randomColor}', ${variable});`
 }
