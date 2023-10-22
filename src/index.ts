@@ -1,5 +1,6 @@
 import * as vscode from 'vscode'
 import * as ts from 'typescript'
+import { getActiveText } from '@vscode-use/utils'
 import { dashAst } from './walker'
 
 /**
@@ -8,73 +9,7 @@ import { dashAst } from './walker'
  * 2. 生成的前缀空格还需要改进
  */
 export function activate() {
-  vscode.commands.registerTextEditorCommand('extension.log', async (textEditor) => {
-    // todo: 根据选中内容当前行判断是否是存在换行定义字段，将log追加到其之后
-    const doc = textEditor.document
-    const editor = vscode.window.activeTextEditor!
-    // 获取全部文本区域
-    const allText = doc.getText()
-    const fileName = doc.fileName.split(vscode.env.appName === 'Visual Studio Code' ? '/' : '\\').slice(-1)[0]
-    const suffix = fileName.split('.').slice(-1)[0]
-
-    const selection = editor.selection as any
-    const [start, end] = getPosition(allText, selection.start.c, selection.start.e)
-    const tab = getTab(allText, selection.start.c)
-    const text = doc.getText(selection)
-    const append = transformAppend(suffix, tab, `🤪 ~ file: ${fileName}:${selection.end.line + 1}`, text)
-    if (!text) {
-      return textEditor.edit((builder) => {
-        builder.insert(new vscode.Position(selection.end.line + 1, 0), append)
-      })
-    }
-    const ast = ts.createSourceFile('test.ts', doc.getText(), ts.ScriptTarget.Latest, true, ts.ScriptKind.TS)
-    const nodes: { name: string; start: number; end: number; type: number }[] = []
-    dashAst(ast, (currentNode: any) => {
-      try {
-        // 259 FunctionDeclaration
-        if (!currentNode)
-          return
-        let { end: _end, pos: _start, kind, escapedText, parent } = currentNode
-        if (kind === ts.SyntaxKind.SourceFile || !escapedText)
-          return
-
-        if (kind === 79)
-          _end = parent.end
-
-        if (parent.kind !== 171 && parent.kind !== 259)
-          return
-        if (_end > end && _start < start) {
-          nodes.push({
-            name: escapedText,
-            start: _start,
-            end: _end,
-            type: parent.kind,
-          })
-        }
-      }
-      catch (e) {
-      }
-    })
-    let position = new vscode.Position(selection.end.line + 1, 0)
-    let fileInfo = selection.end.line + 1
-    const head = nodes.reduce((pre: any, cur: any) => {
-      if (!pre)
-        return cur.name
-      if (!cur)
-        return pre
-      if (cur.type === 257) {
-        const end = cur.end
-        const endLine = getLine(allText, end)!
-        fileInfo = endLine + 1
-        position = new vscode.Position(endLine + 1, 0)
-      }
-      return `${pre}/${cur.name}`
-    }, '')
-
-    textEditor.edit((builder) => {
-      builder.insert(position, transformAppend(suffix, tab, `🤪 ~ file: ${fileName}:${fileInfo} [${head}] -> ${text}`, text))
-    })
-  })
+  vscode.commands.registerTextEditorCommand('extension.log', getLog)
 }
 
 export function deactivate() {
@@ -124,6 +59,79 @@ function transformAppend(suffix: string, tab: number, logPrefix: string, text: s
     case 'rs':
       return `${' '.repeat(tab)}println!("${logPrefix} : {}", ${text || '\"\"'});\n`
     default:
-      return `${' '.repeat(tab)}console.log('${logPrefix} : ', ${text || '\"\"'})\n`
+      return `${' '.repeat(tab)}${logWithRandomColor(`${logPrefix} : `, `${text || '\"\"'}`)}\n`
   }
+}
+
+function getLog(editor: vscode.TextEditor) {
+  const selections = editor.selections
+  const allText = getActiveText()!
+  const doc = editor.document
+  const fileName = doc.fileName.split(vscode.env.appName === 'Visual Studio Code' ? '/' : '\\').slice(-1)[0]
+  const suffix = fileName.split('.').slice(-1)[0]
+
+  const data = Array.from(selections).map((selection: vscode.Selection) => {
+    const [start, end] = getPosition(allText, selection.start.line, selection.start.character)
+    const tab = getTab(allText, selection.start.line)
+    const text = doc.getText(selection)
+    const append = transformAppend(suffix, tab, `🤪 ~ file: ${fileName}:${selection.end.line + 1}`, text)
+    if (!text) {
+      return editor.edit((builder) => {
+        builder.insert(new vscode.Position(selection.end.line + 1, 0), append)
+      })
+    }
+    const ast = ts.createSourceFile('test.ts', doc.getText(), ts.ScriptTarget.Latest, true, ts.ScriptKind.TS)
+    const nodes: { name: string; start: number; end: number; type: number }[] = []
+    dashAst(ast, (currentNode: any) => {
+      try {
+        if (!currentNode)
+          return
+        let { end: _end, pos: _start, kind, escapedText, parent } = currentNode
+        if (kind === ts.SyntaxKind.SourceFile || !escapedText)
+          return
+
+        if (kind === 79)
+          _end = parent.end
+
+        if (_end >= end && _start <= start) {
+          nodes.push({
+            name: escapedText,
+            start: _start,
+            end: _end,
+            type: parent.kind,
+          })
+        }
+      }
+      catch (e) {
+      }
+    })
+    let position = new vscode.Position(selection.end.line + 1, 0)
+    let fileInfo = selection.end.line + 1
+    const head = nodes.reduce((pre: any, cur: any) => {
+      if (!pre)
+        return cur.name
+      if (!cur)
+        return pre
+      if (cur.type === 257) {
+        const end = cur.end
+        const endLine = getLine(allText, end)!
+        fileInfo = endLine + 1
+        position = new vscode.Position(endLine + 1, 0)
+      }
+      return `${pre}/${cur.name}`
+    }, '')
+    return [position, tab, fileInfo, head, text,]
+  })
+  editor.edit((builder) => {
+    data.forEach(item => {
+      const [position, tab, fileInfo, head, text] = item as any
+      builder.insert(position, transformAppend(suffix, tab, `🤪 ~ file: ${fileName}:${fileInfo} [${head}] -> ${text}`, text))
+    })
+  })
+
+}
+
+function logWithRandomColor(text:string, variable:any) {
+  const randomColor = '#' + Math.floor(Math.random() * 16777215).toString(16);
+  return `console.log('%c${text}', 'color: ${randomColor}', ${variable});`
 }
