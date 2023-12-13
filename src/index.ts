@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
 import * as ts from 'typescript'
-import { getActiveText } from '@vscode-use/utils'
+import { getActiveText, getCopyText } from '@vscode-use/utils'
 import { dashAst } from './walker'
 
 /**
@@ -63,7 +63,7 @@ function transformAppend(suffix: string, tab: number, logPrefix: string, text: s
   }
 }
 
-function getLog(editor: vscode.TextEditor) {
+async function getLog(editor: vscode.TextEditor) {
   const selections = editor.selections
   const allText = getActiveText()!
   const doc = editor.document
@@ -74,8 +74,11 @@ function getLog(editor: vscode.TextEditor) {
     const [start, end] = getPosition(allText, selection.start.line, selection.start.character)
     const tab = getTab(allText, selection.start.line)
     const text = doc.getText(selection)
-    const append = transformAppend(suffix, tab, `🤪 ~ file: ${fileName}:${selection.end.line + 1}`, text)
     if (!text) {
+      const copyText = await getCopyText()
+      const append = copyText
+        ? transformAppend(suffix, tab, `🤪 ~ file: ${fileName}:${selection.end.line + 1}`, copyText.replace(/\n/g, ', '))
+        : transformAppend(suffix, tab, `🤪 ~ file: ${fileName}:${selection.end.line + 1}`, text)
       return editor.edit((builder) => {
         builder.insert(new vscode.Position(selection.end.line + 1, 0), append)
       })
