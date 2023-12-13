@@ -9,6 +9,10 @@ Quickly generate console.log
 ## Hot key
 - ctrl+l
 
+## New features
+
+- Supports copying multiple variable names, and then using `ctrl+l` in blank lines to generate logs containing multiple variable names
+
 ![demo](assets/demo.gif)
 
 ## :coffee:

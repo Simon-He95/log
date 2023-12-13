@@ -8,7 +8,11 @@
 
 ## 快捷键
 - ctrl+l
-- 
+
+## 新特性
+
+- 支持了复制多个变量名，然后在空行使用 `ctrl+l`，生成包含多个变量名的log
+
 ![demo](assets/demo.gif)
 
 ## :coffee:
