@@ -3,8 +3,7 @@
 </p>
 <p align="center"> <a href="./README.md">English</a> | 简体中文</p>
 
->✨ WIP
-快速的生成console.log
+快速生成 `console.log`, 通过 copy 多个变量，然后在空行使用 `ctrl+l` 既可以生成，带有编辑器 `文件名 + 行数 + 随机颜色的日志消息`
 
 ## 快捷键
 - ctrl+l

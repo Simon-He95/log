@@ -4,7 +4,7 @@
   "displayName": "log",
   "version": "0.0.8",
   "packageManager": "pnpm@8.15.9",
-  "description": "log",
+  "description": "Quickly generate console.log statements in your code",
   "author": "Simon He <https://github.com/Simon-He95>",
   "license": "MIT",
   "funding": "https://github.com/sponsors/Simon-He95",
@@ -60,7 +60,6 @@
     "@types/node": "^18.19.50",
     "@types/vscode": "^1.93.0",
     "@vscode-use/utils": "^0.0.66",
-    "@vscode/vsce": "^3.1.0",
     "bumpp": "^9.5.2",
     "eslint": "^8.57.1",
     "esno": "^0.16.3",
@@ -68,6 +67,15 @@
     "rimraf": "^4.4.1",
     "tsup": "^6.7.0",
     "typescript": "^5.6.2",
-    "vitest": "^0.29.8"
-  }
+    "vitest": "^0.29.8",
+    "@vscode/vsce": "^3.0.0"
+  },
+  "keywords": [
+    "vscode",
+    "extension",
+    "console.log",
+    "logging",
+    "developer tools",
+    "productivity"
+  ]
 }

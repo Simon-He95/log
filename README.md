@@ -3,8 +3,7 @@
 </p>
 <p align="center"> English | <a href="./README_zh.md">简体中文</a></p>
 
->✨ WIP
-Quickly generate console.log
+Quickly generate `console.log`, by copying multiple variables, and then using `ctrl+l` on a blank line to generate a log message with the editor `file name + line number + random color`
 
 ## Hot key
 - ctrl+l
