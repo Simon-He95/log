@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
 import * as ts from 'typescript'
-import { getActiveText, getCopyText } from '@vscode-use/utils'
+import { createExtension, getActiveText, getCopyText, registerCommand } from '@vscode-use/utils'
 import { dashAst } from './walker'
 
 /**
@@ -8,13 +8,9 @@ import { dashAst } from './walker'
  * 1. 判断上下文如果在注释代码中，需要自动生成到最后一个注释后
  * 2. 生成的前缀空格还需要改进
  */
-export function activate() {
-  vscode.commands.registerTextEditorCommand('extension.log', getLog)
-}
-
-export function deactivate() {
-
-}
+export =  createExtension(() => {
+  registerCommand('extension.log', getLog)
+})
 
 // 根据行位置获取字符串位置
 function getPosition(allText: string, line: number, offset: number) {

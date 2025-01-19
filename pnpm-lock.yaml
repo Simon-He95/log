@@ -18,10 +18,10 @@ importers:
         specifier: ^1.93.0
         version: 1.93.0
       '@vscode-use/utils':
-        specifier: ^0.0.66
-        version: 0.0.66
+        specifier: ^0.1.40
+        version: 0.1.40
       '@vscode/vsce':
-        specifier: ^3.1.0
+        specifier: ^3.0.0
         version: 3.1.0
       bumpp:
         specifier: ^9.5.2
@@ -662,9 +662,9 @@ packages:
   '@vitest/utils@0.29.8':
     resolution: {integrity: sha512-qGzuf3vrTbnoY+RjjVVIBYfuWMjn3UMUqyQtdGNZ6ZIIyte7B37exj6LaVkrZiUTvzSadVvO/tJm8AEgbGCBPg==}
 
-  '@vscode-use/utils@0.0.66':
-    resolution: {integrity: sha512-R31mZLUbSMgxtFdQUql5f9lHlm+lrc1StkUvPcXjaBmnW8RV2IRDS8emF1uv870ECy89CMUJasNIXGcMQ+lahw==}
-    engines: {vscode: ^1.77.0}
+  '@vscode-use/utils@0.1.40':
+    resolution: {integrity: sha512-WrSooRGZ0plcp9ah4QlKf1zzruDS7/NqML93yawoQMp+6N2Okk/3qMo2DyEgHKkedZGxMI5FLfj1I96zxv7pCw==}
+    engines: {vscode: ^1.92.0}
 
   '@vscode/vsce-sign-alpine-arm64@2.0.2':
     resolution: {integrity: sha512-E80YvqhtZCLUv3YAf9+tIbbqoinWLCO/B3j03yQPbjT3ZIHCliKZlsy1peNc4XNZ5uIb87Jn0HWx/ZbPXviuAQ==}
@@ -1483,6 +1483,7 @@ packages:
   eslint@8.57.1:
     resolution: {integrity: sha512-ypowyDxpVSYpkXr9WPv2PAZCtNip1Mv5KTW0SCurXv/9iOpcrH9PaqUElksqEB6pChqHGDRCFTyrZlGhnLNGiA==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+    deprecated: This version is no longer supported. Please see https://eslint.org/version-support for other options.
     hasBin: true
 
   esno@0.16.3:
@@ -3726,7 +3727,7 @@ snapshots:
       loupe: 2.3.6
       pretty-format: 27.5.1
 
-  '@vscode-use/utils@0.0.66': {}
+  '@vscode-use/utils@0.1.40': {}
 
   '@vscode/vsce-sign-alpine-arm64@2.0.2':
     optional: true
