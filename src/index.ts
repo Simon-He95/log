@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
 import * as ts from 'typescript'
-import { createExtension, getActiveText, getCopyText, registerCommand } from '@vscode-use/utils'
+import { createExtension, getActiveText, getActiveTextEditor, getCopyText, registerCommand } from '@vscode-use/utils'
 import { dashAst } from './walker'
 
 /**
@@ -59,7 +59,8 @@ function transformAppend(suffix: string, tab: number, logPrefix: string, text: s
   }
 }
 
-async function getLog(editor: vscode.TextEditor) {
+async function getLog() {
+  const editor = getActiveTextEditor()!
   const selections = editor.selections
   const allText = getActiveText()!
   const doc = editor.document
