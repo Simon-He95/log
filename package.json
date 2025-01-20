@@ -2,7 +2,7 @@
   "publisher": "simonhe",
   "name": "log",
   "displayName": "log",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "packageManager": "pnpm@8.15.9",
   "description": "Quickly generate console.log statements in your code",
   "author": "Simon He <https://github.com/Simon-He95>",
