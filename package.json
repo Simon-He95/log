@@ -3,7 +3,6 @@
   "name": "log",
   "displayName": "log",
   "version": "0.0.10",
-  "packageManager": "pnpm@8.15.9",
   "description": "Quickly generate console.log statements in your code",
   "author": "Simon He <https://github.com/Simon-He95>",
   "license": "MIT",
@@ -25,7 +24,7 @@
   "main": "./dist/index.js",
   "icon": "icon.png",
   "engines": {
-    "vscode": "^1.93.0"
+    "vscode": "^1.77.0"
   },
   "activationEvents": [
     "onStartupFinished"
@@ -33,16 +32,30 @@
   "contributes": {
     "commands": [
       {
-        "command": "extension.log",
+        "command": "log.log",
         "title": "log"
       }
     ],
     "keybindings": [
       {
-        "command": "extension.log",
+        "command": "log.log",
         "key": "ctrl+l"
       }
-    ]
+    ],
+    "configuration": {
+      "type": "object",
+      "title": "codeLoc",
+      "properties": {
+        "codeLoc.config": {
+          "type": "object",
+          "default": {
+            "fileInfo": true,
+            "scoped": true
+          },
+          "description": "log config"
+        }
+      }
+    }
   },
   "scripts": {
     "dev": "pnpm build --watch",
@@ -56,19 +69,16 @@
     "release": "bumpp && pnpm run publish"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^3.7.1",
-    "@types/node": "^18.19.50",
-    "@types/vscode": "^1.93.0",
-    "@vscode-use/utils": "^0.1.40",
-    "@vscode/vsce": "^3.0.0",
-    "bumpp": "^9.5.2",
+    "@antfu/eslint-config": "^3.16.0",
+    "@types/vscode": "1.77.0",
+    "@vscode-use/utils": "^0.1.47",
+    "bumpp": "^9.11.1",
     "eslint": "^8.57.1",
     "esno": "^0.16.3",
-    "pnpm": "^8.15.9",
-    "rimraf": "^4.4.1",
     "tsup": "^6.7.0",
-    "typescript": "^5.6.2",
-    "vitest": "^0.29.8"
+    "typescript": "^5.7.3",
+    "vitest": "^0.29.8",
+    "@vscode/vsce": "^3.2.2"
   },
   "keywords": [
     "vscode",
