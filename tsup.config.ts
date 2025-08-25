@@ -9,5 +9,8 @@ export default defineConfig({
   dts: false,
   external: [
     'vscode',
+    'typescript',
   ],
+  treeshake: true,
+  minify: true,
 })

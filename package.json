@@ -26,14 +26,24 @@
   "engines": {
     "vscode": "^1.77.0"
   },
-  "activationEvents": [
-    "onStartupFinished"
-  ],
+  "activationEvents": [],
   "contributes": {
     "commands": [
       {
         "command": "log.log",
         "title": "log"
+      },
+      {
+        "command": "log.removeConsoleLogs",
+        "title": "Remove all console.log statements in active editor"
+      },
+      {
+        "command": "log.removeConsoleLogsWorkspace",
+        "title": "Remove console.* statements in workspace"
+      },
+      {
+        "command": "log.previewRemoveConsoleLogs",
+        "title": "Preview console.* removal in active editor"
       }
     ],
     "keybindings": [
@@ -44,15 +54,40 @@
     ],
     "configuration": {
       "type": "object",
-      "title": "codeLoc",
+      "title": "log",
       "properties": {
         "codeLoc.config": {
           "type": "object",
           "default": {
             "fileInfo": true,
-            "scoped": true
+            "scoped": true,
+            "randomColor": true
           },
-          "description": "log config"
+          "description": "Insertion behavior config (legacy key)"
+        },
+        "log.removeConsole": {
+          "type": "object",
+          "default": {
+            "methods": ["log", "warn", "error", "info", "debug"],
+            "preservePatterns": ["TODO", "KEEP"],
+            "includeTrailingNewLine": true
+          },
+          "description": "Remove console.* configuration: methods to target, patterns to preserve if found inside args, and whether to remove the trailing newline if the whole line only contained the call."
+        },
+        "log.removeConsole.workspace": {
+          "type": "object",
+          "default": {
+            "includeGlobs": ["**/*.{js,jsx,ts,tsx}"] ,
+            "excludeGlobs": ["**/node_modules/**", "**/dist/**"],
+            "confirm": true
+          },
+          "description": "Workspace removal options: include / exclude globs and confirmation toggle."
+        },
+        "codeLoc.config.colors": {
+          "type": "array",
+          "default": [],
+            "items": { "type": "string" },
+          "description": "Optional fixed color list for log styling; overrides randomColor when non-empty."
         }
       }
     }
