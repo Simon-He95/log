@@ -2,8 +2,8 @@
   "publisher": "simonhe",
   "name": "log",
   "displayName": "log",
-  "version": "0.0.12",
-  "description": "Quickly generate console.log statements in your code",
+  "version": "0.1.0",
+  "description": "🚀 The ultimate console.log management extension - Smart insertion, beautiful colors, and powerful cleanup tools for JavaScript/TypeScript developers",
   "author": "Simon He <https://github.com/Simon-He95>",
   "license": "MIT",
   "funding": "https://github.com/sponsors/Simon-He95",
@@ -31,25 +31,37 @@
     "commands": [
       {
         "command": "log.log",
-        "title": "log"
+        "title": "🚀 Insert Smart Console.log",
+        "category": "Log"
       },
       {
         "command": "log.removeConsoleLogs",
-        "title": "Remove all console.log statements in active editor"
+        "title": "🧹 Remove Console Logs (Current File)",
+        "category": "Log"
       },
       {
-        "command": "log.removeConsoleLogsWorkspace",
-        "title": "Remove console.* statements in workspace"
+        "command": "log.removeConsoleLogsWorkspace", 
+        "title": "🌍 Remove Console Logs (Workspace)",
+        "category": "Log"
       },
       {
         "command": "log.previewRemoveConsoleLogs",
-        "title": "Preview console.* removal in active editor"
+        "title": "👁️ Preview Console Log Removal",
+        "category": "Log"
       }
     ],
     "keybindings": [
       {
         "command": "log.log",
-        "key": "ctrl+l"
+        "key": "ctrl+l",
+        "mac": "cmd+l",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "log.removeConsoleLogs",
+        "key": "ctrl+shift+l",
+        "mac": "cmd+shift+l", 
+        "when": "editorTextFocus"
       }
     ],
     "configuration": {
@@ -117,10 +129,24 @@
   },
   "keywords": [
     "vscode",
-    "extension",
+    "extension", 
     "console.log",
     "logging",
     "developer tools",
-    "productivity"
+    "productivity",
+    "javascript",
+    "typescript",
+    "debugging",
+    "console management",
+    "log insertion",
+    "code cleanup",
+    "smart logging",
+    "multi-line expressions",
+    "ast parsing",
+    "workspace cleanup",
+    "preview mode",
+    "colored output",
+    "variable detection",
+    "development workflow"
   ]
 }

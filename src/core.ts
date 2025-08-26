@@ -2,6 +2,7 @@ import * as vscode from 'vscode'
 import * as ts from 'typescript'
 import { createPosition, getActiveText, getActiveTextEditor, getCopyText, useConfiguration } from "@vscode-use/utils/index"
 import { dashAst } from "./walker"
+import { computeInsertionLine } from './insertion'
 
 // --- Utility Types ---
 interface CapturedNode { name: string; start: number; end: number; type: number }
@@ -61,7 +62,7 @@ export async function getLog() {
   const data: Array<[vscode.Position, number, number, string, string]> = []
 
   for (const selection of selections) {
-    const [start, end] = getPosition(allText, selection.start.line, selection.start.character)
+  const [start, end] = getPosition(allText, selection.start.line, selection.start.character)
     const indent = getIndent(doc, selection.start.line)
     const selectedText = doc.getText(selection)
 
@@ -95,7 +96,7 @@ export async function getLog() {
       } catch {}
     })
 
-    let position = new vscode.Position(selection.end.line + 1, 0)
+  let position = new vscode.Position(selection.end.line + 1, 0)
     let fileInfo = selection.end.line + 1
     const head = nodes.reduce((pre: string, cur: CapturedNode) => {
       if (!pre) return cur.name
@@ -109,8 +110,12 @@ export async function getLog() {
       return `${pre}/${cur.name}`
     }, '')
     // 注释块判断
-    const adjustedLine = computeInsertLineIfInComment(doc, position.line - 1)
-    position = new vscode.Position(adjustedLine + 1, 0)
+  // Expression boundary adjustment: if inside a multi-line call/object/array literal append after that expression
+  const insertionAfterExpr = computeInsertionLine({ source: doc.getText(), offset: doc.offsetAt(selection.end), currentLine: selection.end.line })
+  let targetLine = insertionAfterExpr !== undefined ? insertionAfterExpr : position.line
+  // Comment block adjustment
+  targetLine = computeInsertLineIfInComment(doc, targetLine - 1) + 1
+  position = new vscode.Position(targetLine, 0)
     data.push([position, indent, fileInfo, head, selectedText])
   }
 
