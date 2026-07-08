@@ -2,7 +2,7 @@
   "publisher": "simonhe",
   "name": "log",
   "displayName": "log",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "🚀 The ultimate console.log management extension - Smart insertion, beautiful colors, and powerful cleanup tools for JavaScript/TypeScript developers",
   "author": "Simon He <https://github.com/Simon-He95>",
   "license": "MIT",
