@@ -8,9 +8,16 @@ function runCase(source: string, marker: string) {
   return computeInsertionLine({ source, offset, currentLine })
 }
 
+function runCaseAtEnd(source: string, marker: string) {
+  const offset = source.indexOf(marker) + marker.length
+  if (offset < marker.length) throw new Error('marker not found')
+  const currentLine = source.slice(0, offset).split('\n').length - 1
+  return computeInsertionLine({ source, offset, currentLine })
+}
+
 const sample1 = `this.printVal = this.easingFn({\n  progress,\n  xxx,\n})\n` // want line after closing }
 const sample2 = `this.printVal = this.easingFn(\n  progress,\n  xxx,\n)\nnext()`
-const sample3 = `this.printVal = this.easingFn([\n {\n   progress,\n },\n  xxx,\n])\n` 
+const sample3 = `this.printVal = this.easingFn([\n {\n   progress,\n },\n  xxx,\n])\n`
 
 // More complex nested cases
 const sample4 = `const result = func({\n  nested: {\n    deep: {\n      value: progress\n    }\n  }\n})\n`
@@ -50,5 +57,37 @@ describe('computeInsertionLine', () => {
     const line = runCase(sample6, 'progress')
     // Should insert after object closing }, not after if block
     expect(line).toBe(4)
+  })
+
+  it('does not insert after whole Vue option arrow function body', () => {
+    const source = `<script>
+export default {
+  mounted: () => {
+    const foo = 1
+  },
+}
+</script>`
+
+    expect(runCaseAtEnd(source, 'foo')).toBeUndefined()
+  })
+
+  it('still inserts after multiline expression inside Vue option method', () => {
+    const source = `<script>
+export default {
+  methods: {
+    test() {
+      const result = api({
+        id: 1,
+      })
+    },
+  },
+}
+</script>`
+    const line = runCaseAtEnd(source, 'id')
+    const scriptEndLine = source.split('\n').findIndex(line => line.includes('</script>'))
+
+    // api(...) closes on line 6 (0-based), so insert on the next line.
+    expect(line).toBe(7)
+    expect(line).toBeLessThan(scriptEndLine)
   })
 })
